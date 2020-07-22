@@ -34,9 +34,7 @@ const App = () => {
 
   const moveSnake = ({keyCode}) => keyCode >=37 && keyCode <=40 && setDir(DIRECTIONS[keyCode]); 
 
-  const createApple = () => {
-
-  };
+  const createApple = () => apple.map((_, i) => Math.floor(Math.random() * CANVAS_SIZE[i] / SCALE));
 
   const checkCollision = (piece, snk = snake) => {
     if(
@@ -54,8 +52,16 @@ const App = () => {
       return false;
   };
 
-  const checkAppleCollison = () => {
-
+  const checkAppleCollison = newSnake => {
+    if(newSnake[0][0] === apple[0] && newSnake[0][1] === apple[1]) {
+      let newApple = createApple();
+      while(checkCollision(newApple, newSnake)) {
+        newApple = createApple();
+      }
+      setApple(newApple);
+      return true;
+    }
+    return false;
   };
 
   const gameLoop = () => {
@@ -63,7 +69,7 @@ const App = () => {
     const newSnakeHead = [cloneSnake[0][0] + dir[0], cloneSnake[0][1] + dir[1]];
     cloneSnake.unshift(newSnakeHead);
     if(checkCollision(newSnakeHead)) endGame();
-    cloneSnake.pop();
+    if(!checkAppleCollison(cloneSnake)) cloneSnake.pop();
     setSnake(cloneSnake);
   };
 
