@@ -8,6 +8,7 @@ import {
   SPEED,
   DIRECTIONS,
 } from './constants';
+import Display from './Display'
 
 const App = () => {
   const canvasRef = useRef();
@@ -16,6 +17,7 @@ const App = () => {
   const [dir, setDir] = useState([0,-1]);
   const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
 
   
   
@@ -25,6 +27,7 @@ const App = () => {
     setDir([0, -1]);
     setSpeed(SPEED);
     setGameOver(false);
+    setScore(0);
   };
 
   const endGame = () => {
@@ -59,6 +62,7 @@ const App = () => {
         newApple = createApple();
       }
       setApple(newApple);
+      setScore(prev => prev+=1);
       return true;
     }
     return false;
@@ -94,6 +98,7 @@ const App = () => {
         height={`${CANVAS_SIZE[1]}px`}
       />
       {gameOver && <div>GAME OVER!</div>}
+      <Display text={`Score: ${score}`} />
       <button onClick={startGame} >Start Game</button>
     </div>
   )
