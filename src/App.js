@@ -14,20 +14,24 @@ const App = () => {
   const [snake, setSnake] = useState(SNAKE_START);
   const [apple, setApple] = useState(APPLE_START);
   const [dir, setDir] = useState([0,-1]);
-  const [speed, setSpeed] = useState();
+  const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(false);
+
+  
   
   const startGame = () => {
-
+    setSnake(SNAKE_START);
+    setApple(APPLE_START);
+    setDir([0, -1]);
+    setSpeed(SPEED);
+    setGameOver(false);
   };
 
   const endGame = () => {
 
   };
 
-  const moveSnake = () => {
-
-  };
+  const moveSnake = ({keyCode}) => keyCode >=37 && keyCode <=40 && setDir(DIRECTIONS[keyCode]); 
 
   const createApple = () => {
 
@@ -42,7 +46,11 @@ const App = () => {
   };
 
   const gameLoop = () => {
-
+    const cloneSnake = JSON.parse(JSON.stringify(snake));
+    const newSnakeHead = [cloneSnake[0][0] + dir[0], cloneSnake[0][1] + dir[1]];
+    cloneSnake.unshift(newSnakeHead);
+    cloneSnake.pop();
+    setSnake(cloneSnake);
   };
 
   useEffect(() => {
@@ -54,6 +62,8 @@ const App = () => {
     context.fillStyle = "red";
     context.fillRect(apple[0], apple[1], 1, 1);
   }, [snake, apple, gameOver]);
+
+  useInterval(() => gameLoop(), speed);
 
   return (
     <div role="button" tab="0" onKeyDown={e => moveSnake(e)}>
